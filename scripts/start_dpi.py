@@ -220,31 +220,45 @@ class DPISystem:
     
     def start_web_interface(self):
         """Start web interface"""
-        web_config = self.config.get('web_interface', {})
-        if not web_config.get('enabled', False):
-            return True
-        
-        self.logger.info("Starting web interface...")
+        self.logger.info("Starting Flask API server...")
         
         try:
-            # Start web interface
-            web_script = 'scripts/web_interface.py'
-            if os.path.exists(web_script):
-                web_process = subprocess.Popen([
-                    'python3', web_script,
-                    '--host', web_config.get('host', '0.0.0.0'),
-                    '--port', str(web_config.get('port', 5000))
-                ])
-                self.processes['web_interface'] = web_process
-                self.logger.info("Web interface started")
-            else:
-                self.logger.warning("Web interface script not found")
-            
+            web_process = subprocess.Popen([
+                'python3', 'scripts/flask_api.py',
+                '--host', '0.0.0.0',
+                '--port', '5000'
+            ])
+            self.processes['flask_api'] = web_process
+            self.logger.info("Flask API server started")
             return True
-            
         except Exception as e:
-            self.logger.error(f"Error starting web interface: {e}")
+            self.logger.error(f"Error starting Flask API: {e}")
             return False
+        # web_config = self.config.get('web_interface', {})
+        # if not web_config.get('enabled', False):
+        #     return True
+        
+        # self.logger.info("Starting web interface...")
+        
+        # try:
+        #     # Start web interface
+        #     web_script = 'scripts/web_interface.py'
+        #     if os.path.exists(web_script):
+        #         web_process = subprocess.Popen([
+        #             'python3', web_script,
+        #             '--host', web_config.get('host', '0.0.0.0'),
+        #             '--port', str(web_config.get('port', 5000))
+        #         ])
+        #         self.processes['web_interface'] = web_process
+        #         self.logger.info("Web interface started")
+        #     else:
+        #         self.logger.warning("Web interface script not found")
+            
+        #     return True
+            
+        # except Exception as e:
+        #     self.logger.error(f"Error starting web interface: {e}")
+        #     return False
     
     def start_monitoring(self):
         """Start monitoring and statistics collection"""
